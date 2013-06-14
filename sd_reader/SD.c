@@ -331,11 +331,8 @@ uint8_t sd_remove_file(char* filename){
 uint8_t sd_open_file(char* filename, uint8_t opt) {
 
 	if(fatfile) {
-		if(strcmp(fatfile->dir_entry.long_name, filename) == 0) {
-			return 1;
-		} else {
-			sd_close_file();
-		}
+		//if(strcmp(fatfile->dir_entry.long_name, filename) == 0)
+		sd_close_file();
 	}
 
 	//search file
@@ -346,6 +343,8 @@ uint8_t sd_open_file(char* filename, uint8_t opt) {
 		if(opt & FILE_RECREATE) {
 			// truncate
 			fat_resize_file(fatfile, 0);
+			int32_t file_pos = 0;
+			fat_seek_file(fatfile, &file_pos, FAT_SEEK_SET);
 		}
 	} else {
 		// file doesn't exist
@@ -369,7 +368,7 @@ uint8_t sd_open_file(char* filename, uint8_t opt) {
 void sd_close_file(void){
 
 	fat_close_file(fatfile);
-	fatfile=NULL;
+	fatfile=0;
 }
 
 

@@ -18,6 +18,7 @@
 #define UART_H
 
 #include <avr/pgmspace.h>
+#include <stdio.h>
 
 #ifndef UART_RX_BUFFER_SIZE
 	#define UART_RX_BUFFER_SIZE 16
@@ -41,6 +42,8 @@
 // function prototypes
 extern void uart_init(uint32_t baudrate);
 extern unsigned int uart_getc(void); 	   // low byte: received character, high byte: last receive error
+
+extern void uart_putstream(char c, FILE *stream); // printf; '
 extern void uart_putc(char data); 		   // put char into transmit circular buffer
 extern void uart_putc_hex(uint8_t b);	   // represent byte in hex format (0xAB) and put into circular buffer
 extern void uart_putw_hex(uint16_t w);     // uint16_t to hex (0xABCD)
@@ -55,7 +58,7 @@ extern void uart_flush(void); 			   // flush bytes waiting in receive buffer
 #define uart_puts_P(__s) 	uart_puts_p(PSTR(__s)) // Macro to automatically put a string constant into program memory
 
 // initialize USART1 (only available on selected ATmegas), see uart_init
-extern void uart1_init(unsigned int baudrate);
+extern void uart1_init(uint32_t baudrate);
 extern unsigned int uart1_getc(void);
 extern void uart1_putc(unsigned char data);
 extern void uart1_puts(const char *s );

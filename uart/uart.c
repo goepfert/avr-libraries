@@ -24,37 +24,36 @@
 #define UART_RX_BUFFER_MASK (UART_RX_BUFFER_SIZE - 1)
 #define UART_TX_BUFFER_MASK (UART_TX_BUFFER_SIZE - 1)
 
-#if defined(__AVR_ATmega48__)  || defined(__AVR_ATmega88__)  || defined(__AVR_ATmega168__) || \
-    defined(__AVR_ATmega48P__) || defined(__AVR_ATmega88P__) || defined(__AVR_ATmega168P__) || \
+#if defined(__AVR_ATmega2560__) || defined(__AVR_ATmega1280__) || defined(__AVR_ATmega640__) || defined(__AVR_ATmega1284P__)
+	// ATmega with two USART
+ 	 #define ATMEGA_USART0
+ 	 #define ATMEGA_USART1
+ 	 #define UART0_RECEIVE_INTERRUPT   USART0_RX_vect
+ 	 #define UART1_RECEIVE_INTERRUPT   USART1_RX_vect
+ 	 #define UART0_TRANSMIT_INTERRUPT  USART0_UDRE_vect
+ 	 #define UART1_TRANSMIT_INTERRUPT  USART1_UDRE_vect
+ 	 #define UART0_STATUS   UCSR0A
+ 	 #define UART0_CONTROL  UCSR0B
+ 	 #define UART0_DATA     UDR0
+ 	 #define UART0_UDRIE    UDRIE0
+ 	 #define UART1_STATUS   UCSR1A
+ 	 #define UART1_CONTROL  UCSR1B
+ 	 #define UART1_DATA     UDR1
+ 	 #define UART1_UDRIE    UDRIE1
+#elif defined(__AVR_ATmega48__)  || defined(__AVR_ATmega88__)  || defined(__AVR_ATmega168__) || \
+	defined(__AVR_ATmega48P__) || defined(__AVR_ATmega88P__) || defined(__AVR_ATmega168P__) || \
     defined(__AVR_ATmega328P__)
- // ATmega with one USART
- #define ATMEGA_USART0
- #define UART0_RECEIVE_INTERRUPT   USART_RX_vect
- #define UART0_TRANSMIT_INTERRUPT  USART_UDRE_vect
- #define UART0_STATUS   UCSR0A
- #define UART0_CONTROL  UCSR0B
- #define UART0_DATA     UDR0
- #define UART0_UDRIE    UDRIE0
-#elif defined(__AVR_ATmega2560__) || defined(__AVR_ATmega1280__) || defined(__AVR_ATmega640__)
-// ATmega with two USART
-  #define ATMEGA_USART0
-  #define UART0_RECEIVE_INTERRUPT   USART0_RX_vect
-  #define UART0_TRANSMIT_INTERRUPT  USART1_RX_vect
-  #define UART0_STATUS   UCSR0A
-  #define UART0_CONTROL  UCSR0B
-  #define UART0_DATA     UDR0
-  #define UART0_UDRIE    UDRIE0
-  #define ATMEGA_USART1
-  #define UART1_TRANSMIT_INTE, DOR=3RRUPT  USART1_UDRE_vect
-  #define UART1_RECEIVE_INTERRUPT   USART0_UDRE_vect
-  #define UART1_STATUS   UCSR1A
-  #define UART1_CONTROL  UCSR1B
-  #define UART1_DATA     UDR1
-  #define UART1_UDRIE    UDRIE1  
+	// ATmega with one USART
+ 	#define ATMEGA_USART0
+ 	#define UART0_RECEIVE_INTERRUPT   USART_RX_vect
+ 	#define UART0_TRANSMIT_INTERRUPT  USART_UDRE_vect
+ 	#define UART0_STATUS   UCSR0A
+ 	#define UART0_CONTROL  UCSR0B
+ 	#define UART0_DATA     UDR0
+ 	#define UART0_UDRIE    UDRIE0
 #else
  #error "no UART definition for MCU available"
 #endif
-
 
 // global variables, only visible here (in this file)
 static volatile uint8_t UART_TxBuf[UART_TX_BUFFER_SIZE];
@@ -309,6 +308,11 @@ unsigned int uart_available(void){
 void uart_flush(void){
 
     UART_RxHead = UART_RxTail;
+}
+
+
+void uart_putstream(char c, FILE *stream){
+	uart_putc(c);
 }
 
 

@@ -71,32 +71,32 @@ extern "C"
  * @}
  */
 
-// pin port of SD ChipSelect
-#define SD_CS_DDR DDRD
-#define SD_CS_PORT PORTD
-#define SD_CS_PIN 4
-
 /* defines for customisation of sd/mmc port access */
-#if defined(__AVR_ATmega8__) || \
-    defined(__AVR_ATmega48__) || \
-    defined(__AVR_ATmega48P__) || \
-    defined(__AVR_ATmega88__) || \
-    defined(__AVR_ATmega88P__) || \
-    defined(__AVR_ATmega168__) || \
-    defined(__AVR_ATmega168P__) || \
-    defined(__AVR_ATmega328P__)
-    #define configure_pin_mosi() DDRB |= (1 << DDB3)
-    #define configure_pin_sck() DDRB |= (1 << DDB5)
-    #define configure_pin_miso() DDRB &= ~(1 << DDB4)
-	/*
-	#define configure_pin_ss() DDRD |= (1 << DDD4)
-    #define select_card() PORTD &= ~(1 << PORTD4)
-    #define unselect_card() PORTD |= (1 << PORTD4)
-	*/
+#if defined(__AVR_ATmega1284P__)
+	#define SD_CS_DDR DDRA
+	#define SD_CS_PORT PORTA
+	#define SD_CS_PIN 4
+
+	#define configure_pin_mosi() DDRB |= (1 << DDB5)
+	#define configure_pin_sck() DDRB |= (1 << DDB7)
+	#define configure_pin_miso() DDRB &= ~(1 << DDB6)
+
 	#define configure_pin_ss() SD_CS_DDR |= (1 << SD_CS_PIN)
 	#define select_card() SD_CS_PORT &= ~(1 << SD_CS_PIN)
 	#define unselect_card() SD_CS_PORT |= (1 << SD_CS_PIN)
+#elif defined(__AVR_ATmega8__) || defined(__AVR_ATmega48__) || defined(__AVR_ATmega48P__) || defined(__AVR_ATmega88__) || \
+    defined(__AVR_ATmega88P__) || defined(__AVR_ATmega168__) || defined(__AVR_ATmega168P__) || defined(__AVR_ATmega328P__)
+	#define SD_CS_DDR DDRD
+	#define SD_CS_PORT PORTD
+	#define SD_CS_PIN 4
 
+    #define configure_pin_mosi() DDRB |= (1 << DDB3)
+    #define configure_pin_sck() DDRB |= (1 << DDB5)
+    #define configure_pin_miso() DDRB &= ~(1 << DDB4)
+
+	#define configure_pin_ss() SD_CS_DDR |= (1 << SD_CS_PIN)
+	#define select_card() SD_CS_PORT &= ~(1 << SD_CS_PIN)
+	#define unselect_card() SD_CS_PORT |= (1 << SD_CS_PIN)
 #elif defined(__AVR_ATmega16__) || \
       defined(__AVR_ATmega32__)
     #define configure_pin_mosi() DDRB |= (1 << DDB5)
@@ -106,9 +106,7 @@ extern "C"
 
     #define select_card() PORTB &= ~(1 << PORTB4)
     #define unselect_card() PORTB |= (1 << PORTB4)
-#elif defined(__AVR_ATmega64__) || \
-      defined(__AVR_ATmega128__) || \
-      defined(__AVR_ATmega169__)
+#elif defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__) || defined(__AVR_ATmega169__)
     #define configure_pin_mosi() DDRB |= (1 << DDB2)
     #define configure_pin_sck() DDRB |= (1 << DDB1)
     #define configure_pin_ss() DDRB |= (1 << DDB0)
